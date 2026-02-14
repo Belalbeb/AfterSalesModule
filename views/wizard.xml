@@ -1,0 +1,41 @@
+<odoo>
+    <record id="view_create_po_wizard_form" model="ir.ui.view">
+        <field name="name">create.po.wizard.form</field>
+        <field name="model">create.po.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create RFQ">
+                <sheet>
+                    <!-- Section: Existing RFQ -->
+                    <group>
+                        <separator string="EXISTING RFQ TO UPDATE:" colspan="4"/>
+                        <field name="existing_po_id"/>
+                        <field name="match_by_date"/>
+                    </group>
+
+                    <!-- Section: New PO Details -->
+                    <group>
+                        <separator string="NEW PO DETAILS:" colspan="4"/>
+                        <field name="vendor_id"/>
+                    </group>
+
+                    <!-- One2many: PO Lines -->
+                    <field name="po_line_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="product_id"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="uom_id"/>
+                            <field name="copy_description"/>
+                        </tree>
+                    </field>
+                </sheet>
+
+                <!-- Footer buttons -->
+                <footer>
+                    <button name="action_create_po" type="object" string="Create RFQ" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

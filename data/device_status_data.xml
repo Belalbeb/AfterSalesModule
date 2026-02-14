@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Device Status Records -->
+        <record id="device_status_out_of_order" model="device.status">
+            <field name="name">Out of Order</field>
+            <field name="sequence">1</field>
+            <field name="fold">False</field>
+            <field name="device_is_out_of_order">True</field>
+        </record>
+
+        <record id="device_status_under_testing" model="device.status">
+            <field name="name">Under Testing</field>
+            <field name="sequence">2</field>
+            <field name="fold">False</field>
+            <field name="device_under_testing">True</field>
+        </record>
+
+        <record id="device_status_needs_spare_parts" model="device.status">
+            <field name="name">Needs Spare Parts</field>
+            <field name="sequence">3</field>
+            <field name="fold">False</field>
+            <field name="device_needs_spare_parts">True</field>
+        </record>
+
+        <record id="device_status_working_properly" model="device.status">
+            <field name="name">Working Properly</field>
+            <field name="sequence">4</field>
+            <field name="fold">False</field>
+            <field name="device_is_working_properly">True</field>
+        </record>
+    </data>
+</odoo>

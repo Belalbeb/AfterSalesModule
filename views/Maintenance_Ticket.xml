@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===================== -->
+    <!-- FORM VIEW -->
+    <!-- ===================== -->
+    <record id="maintenance_ticket_view_form" model="ir.ui.view">
+        <field name="name">maintenance.ticket.view.form</field>
+        <field name="model">maintenance.ticket</field>
+        <field name="arch" type="xml">
+            <form string="Maintenance Ticket">
+                <header>
+    <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}"/>
+
+    <!-- hidden computed fields -->
+
+ 
+
+    <!-- Buttons -->
+    <button name="action_create_visit"
+            string="Create Visit"
+            type="object"
+            class="oe_highlight"
+            invisible="not stage_need_visit"/>
+
+    <button name="action_create_quotation"
+            string="Create Quotation"
+            type="object"
+            class="oe_highlight"
+            invisible="not stage_need_quotation"/>
+
+    <button name="action_create_po"
+            string="Create Purchase Order"
+            type="object"
+            class="oe_highlight"
+            invisible="not stage_need_po"/>
+</header>
+
+                <sheet>
+                   <div class="oe_button_box" name="button_box">
+                            <field name="stage_need_visit" invisible="1"/>
+                            <field name="stage_need_quotation" invisible="1"/>
+                            <field name="stage_need_po" invisible="1"/>
+                        
+                            <button name="action_view_visits" type="object" class="oe_stat_button"  invisible="not stage_need_visit"
+                                icon="fa-calendar" string="Visits">  <field name="visit_count" string="Visits"/></button>
+                        
+                            <button name="action_create_quotation" type="object" class="oe_stat_button" invisible="not stage_need_quotation"
+                                icon="fa-calendar" string="Qutation">  <field name="quotation_count" string="Qutation"/></button>
+                        
+                            <button name="action_create_po" type="object" class="oe_stat_button" invisible="not stage_need_po"
+                                icon="fa-calendar" string="Purchase Order">  <field name="po_count" string="Purchase order"/></button>
+                    </div>
+                    <group>
+                        <group>
+                            
+                            <field name="customer"/>
+                            <field name="assigned_to"/>
+                            <field name="part_number"/>
+                            <field name="model"/>
+                            <field name="department"/>
+                            <field name="serial_number" />
+                        </group>
+                        <group>
+                            <field name="maintenance_product"/>
+                            <field name="description"/>
+                            <field name="contact_name"/>
+                            <field name="contact_position"/>
+                            <field name="phone_number"/>
+                            <field name="ticket_category"/>
+                        </group>
+                        
+                    </group>
+                    
+                        
+                    
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Kanban view -->
+     <record id="view_maintenance_ticket_kanban" model="ir.ui.view">
+    <field name="name">maintenance.ticket.kanban</field>
+    <field name="model">maintenance.ticket</field>
+    <field name="arch" type="xml">
+        <kanban default_group_by="stage_id">
+            <field name="stage_id"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <field name="name"/>
+                        <field name="customer"/>
+                        <field name="assigned_to"/>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
+
+
+    <!-- ===================== -->
+    <!-- TREE VIEW -->
+    <!-- ===================== -->
+    <record id="maintenance_ticket_view_tree" model="ir.ui.view">
+        <field name="name">maintenance.ticket.view.tree</field>
+        <field name="model">maintenance.ticket</field>
+        <field name="arch" type="xml">
+            <tree string="Maintenance Tickets">
+                <field name="name"/>
+                <field name="customer"/>
+                <field name="assigned_to"/>
+                <field name="part_number"/>
+                <field name="model"/>
+                <field name="department"/>
+                <field name="ticket_category"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ===================== -->
+    <!-- ACTION -->
+    <!-- ===================== -->
+    <record id="action_maintenance_ticket" model="ir.actions.act_window">
+        <field name="name">Maintenance Tickets</field>
+        <field name="res_model">maintenance.ticket</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+ <record id="group_maintenance_administrator" model="res.groups">
+    <field name="name">Maintenance Administrator</field>
+    <field name="category_id" ref="base.module_category_administration"/>
+    <field name="comment">Users in this group will receive notifications for maintenance tickets open for more than 14 days.</field>
+</record>
+<record id="group_maintenance_line_manager" model="res.groups">
+    <field name="name">Maintenance Line Manager</field>
+    <field name="category_id" ref="base.module_category_administration"/>
+    <field name="comment">Users in this group will receive notifications for maintenance tickets open for more than 14 days.</field>
+</record>
+<record id="group_maintenance_manager" model="res.groups">
+    <field name="name">Maintenance Manager</field>
+    <field name="category_id" ref="base.module_category_administration"/>
+    <field name="comment">Users in this group will receive notifications for maintenance tickets open for more than 14 days.</field>
+</record>
+
+    <record id="cron_notify_maintenance_ticket_2_weeks" model="ir.cron">
+        <field name="name">Maintenance Ticket Notification After 2 Weeks</field>
+        <field name="model_id" ref="model_maintenance_ticket"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_notify_open_tickets_after_two_weeks()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+    </record>
+
+
+
+    <!-- ===================== -->
+    <!-- MENUS -->
+    <!-- ===================== -->
+
+    <!-- Main Menu -->
+    <menuitem
+        id="menu_after_sales"
+        name="After Sales"
+        sequence="10"/>
+
+    <!-- Sub Menu -->
+    <menuitem
+        id="menu_after_sales_maintenance"
+        name="Maintenance"
+        parent="menu_after_sales"
+        sequence="20"/>
+
+    <!-- Final Menu -->
+    <menuitem
+        id="menu_new_ticket"
+        name="New Ticket"
+        parent="menu_after_sales_maintenance"
+        action="action_maintenance_ticket"
+        sequence="10"/>
+
+</odoo>
